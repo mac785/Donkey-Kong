@@ -18,6 +18,7 @@ class JumpMan:  # fix this... and then delete this comment.
         self.width = 20
         self.height = 20
         self.status = Constants.STATUS_WALKING
+        self.timeSinceDeath = 0.0
 
     def isDead(self):
         """
@@ -39,7 +40,25 @@ class JumpMan:  # fix this... and then delete this comment.
         whatever this shape looks like onto the given surface.
         :param surface: what to draw on.
         """
-        color = pygame.Color(128, 128, 128)  # not really necessary
+        if self.status == Constants.STATUS_JUMPING:
+            if self.timeSinceLastJump > Constants.JUMP_DURATION:
+                color = pygame.Color(255,255,255)
+            else:
+                color = pygame.Color(255,255,0)
+            pygame.draw.rect(surface,color,(self.x-self.width/2,self.y-self.height/2,\
+                                            self.width,self.height))
+        elif self.status == Constants.STATUS_DYING:
+            color = pygame.Color(255,0,0)
+            pygame.draw.rect(surface,color,(self.x-self.width/2,self.y-self.height/2,\
+                                            self.width,self.height), 2)
+        elif self.status == Constants.STATUS_WALKING:
+            color = pygame.Color(255,255,0)
+            pygame.draw.rect(surface,color,(self.x-self.width/2,self.y-self.height/2,\
+                                            self.width,self.height))
+            pygame.draw.line(surface,color,(self.x - 3, self.y),\
+                             (self.x-3, self.y+self.height/2+Constants.LEG_LENGTH))
+            pygame.draw.line(surface,color,(self.x + 3, self.y),\
+                             (self.x+3, self.y+self.height/2+Constants.LEG_LENGTH))
 
     def step(self, deltaT):
         """
