@@ -65,10 +65,10 @@ class JumpMan:  # fix this... and then delete this comment.
         self.y += self.vy * deltaT
 
     def moveLeft(self):
-
+        self.x -= Constants.MOVE_DISTANCE
 
     def moveRight(self):
-
+        self.x += Constants.MOVE_DISTANCE
 
     def jump(self):
         if self.timeSinceLastJump> Constants.JUMP_DURATION:
