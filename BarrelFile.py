@@ -1,4 +1,4 @@
-__author__ = 'Jimmyjamz'  # Update this!!!
+__author__ = 'Jimmyjamz'
 import pygame
 import random
 

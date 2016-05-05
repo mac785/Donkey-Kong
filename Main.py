@@ -1,8 +1,5 @@
-#Test
 import pygame, sys, traceback, JumpMan, BarrelFile
 from pygame.locals import *
-
-#import your classFiles here.
 
 __author__ = 'Jimmyjamz'  #put your name here!!!
 # =====================  pre-setup()
@@ -91,8 +88,9 @@ def checkForInteractions():
     this is where we test whether objects are interacting with
     one another.
     """
-    checkJumpManBarrelCollisions()
-    checkJumpManLadderClimb()
+    pass
+    #checkJumpManBarrelCollisions()
+    #checkJumpManLadderClimb()
 # =====================  clearDeadObjects()
 def clearDeadObjects():
     """
@@ -154,7 +152,7 @@ def readEvents():
             if evt.key == K_RIGHT:
                 rightKeyPressed = True
             if evt.key == K_UP:
-                theOstrich.flap()
+                jumpMan.jump()
 
         if evt.type == KEYUP:
             if evt.key == K_LEFT:

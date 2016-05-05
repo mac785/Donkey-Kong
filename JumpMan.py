@@ -15,6 +15,7 @@ class JumpMan:  # fix this... and then delete this comment.
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
+        self.timeSinceLastJump = 10000
         self.width = 20
         self.height = 20
         self.status = Constants.STATUS_WALKING
@@ -42,23 +43,16 @@ class JumpMan:  # fix this... and then delete this comment.
         """
         if self.status == Constants.STATUS_JUMPING:
             if self.timeSinceLastJump > Constants.JUMP_DURATION:
-                color = pygame.Color(255,255,255)
+                color = pygame.Color(255, 255, 255)
             else:
-                color = pygame.Color(255,255,0)
-            pygame.draw.rect(surface,color,(self.x-self.width/2,self.y-self.height/2,\
-                                            self.width,self.height))
+                color = pygame.Color(255, 255, 0)
+            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
         elif self.status == Constants.STATUS_DYING:
-            color = pygame.Color(255,0,0)
-            pygame.draw.rect(surface,color,(self.x-self.width/2,self.y-self.height/2,\
-                                            self.width,self.height), 2)
+            color = pygame.Color(255, 0, 0)
+            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height), 2)
         elif self.status == Constants.STATUS_WALKING:
-            color = pygame.Color(255,255,0)
-            pygame.draw.rect(surface,color,(self.x-self.width/2,self.y-self.height/2,\
-                                            self.width,self.height))
-            pygame.draw.line(surface,color,(self.x - 3, self.y),\
-                             (self.x-3, self.y+self.height/2+Constants.LEG_LENGTH))
-            pygame.draw.line(surface,color,(self.x + 3, self.y),\
-                             (self.x+3, self.y+self.height/2+Constants.LEG_LENGTH))
+            color = pygame.Color(255, 255, 0)
+            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
 
     def step(self, deltaT):
         """
@@ -69,6 +63,19 @@ class JumpMan:  # fix this... and then delete this comment.
         """
         self.x += self.vx * deltaT
         self.y += self.vy * deltaT
+
+    def moveLeft(self):
+
+
+    def moveRight(self):
+
+
+    def jump(self):
+        if self.timeSinceLastJump> Constants.JUMP_DURATION:
+            self.vy -= Constants.JUMPMAN_JUMP_BOOST
+            self.timeSinceLastJump = 0
+        if self.status == Constants.STATUS_WALKING:
+            self.status = Constants.STATUS_JUMPING
 
     def die(self):
         """
