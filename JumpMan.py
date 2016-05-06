@@ -71,11 +71,9 @@ class JumpMan:  # fix this... and then delete this comment.
         self.x += Constants.MOVE_DISTANCE
 
     def jump(self):
-        if self.timeSinceLastJump> Constants.JUMP_DURATION:
-            self.vy -= Constants.JUMPMAN_JUMP_BOOST
-            self.timeSinceLastJump = 0
         if self.status == Constants.STATUS_WALKING:
             self.status = Constants.STATUS_JUMPING
+            self.y += Constants.JUMPMAN_JUMP_BOOST
 
     def die(self):
         """
