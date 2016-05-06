@@ -10,7 +10,7 @@ def preSetup():
     You shouldn't change this method (much) - you can play with screensize & font.
     """
     global buffer, debugFont, objectsOnScreen
-    buffer = pygame.display.set_mode((224,256),pygame.DOUBLEBUF) #window size
+    buffer = pygame.display.set_mode((400,400),pygame.DOUBLEBUF) #window size
     debugFont = pygame.font.SysFont("Helvetica", 12) #this is the font for
                                                     #the bottom of the screen.
     buffer.fill((128,0,255))
@@ -26,7 +26,7 @@ def setup():
     Unlike the "preSetup()" method, you are welcome to change this!
     """
 
-    global jumpMan, leftKeyPressed, rightKeyPressed
+    global jumpMan, leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed
     global barrelList, platformList
 
     jumpMan = JumpMan.JumpMan()
@@ -34,6 +34,8 @@ def setup():
 
     leftKeyPressed = False
     rightKeyPressed = False
+    upKeyPressed = False
+    downKeyPressed = False
 
     barrelList = []
     for i in range(0, 4):
@@ -72,12 +74,16 @@ def animateObjects(deltaT):
     """
     tells each object to step
     """
+    global upKeyPressed, downKeyPressed
     if leftKeyPressed and not rightKeyPressed:
-        pass
-        """PLEASE FIX THIS JAMIE YOU DOOF"""
+        jumpMan.moveLeft()
     if rightKeyPressed and not leftKeyPressed:
-        pass
-        """PLEASE FIX THIS JAMIE YOU DOOF"""
+        jumpMan.moveRight()
+    if upKeyPressed:
+        jumpMan.y -= 2
+        #jumpMan.jump()
+    if downKeyPressed:
+        jumpMan.y += 2
     for object in objectsOnScreen:
         if object.isDead():
             continue # skip the dead ones....
@@ -137,7 +143,7 @@ def readEvents():
     """
     checks the list of events and determines whether to respond to one.
     """
-    global leftKeyPressed, rightKeyPressed
+    global leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed
     events = pygame.event.get() #get the list of all events since the last time
                                 #note: this list might be empty.
     for evt in events:
@@ -152,13 +158,20 @@ def readEvents():
             if evt.key == K_RIGHT:
                 rightKeyPressed = True
             if evt.key == K_UP:
-                jumpMan.jump()
+                upKeyPressed = True
+            if evt.key == K_DOWN:
+                downKeyPressed = True
+
 
         if evt.type == KEYUP:
             if evt.key == K_LEFT:
                 leftKeyPressed = False
             if evt.key == K_RIGHT:
                 rightKeyPressed = False
+            if evt.key == K_UP:
+                upKeyPressed = False
+            if evt.key == K_DOWN:
+                downKeyPressed = False
 
             # You may decide to check other events, like the mouse
             # or keyboard here.

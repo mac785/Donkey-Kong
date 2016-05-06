@@ -15,7 +15,7 @@ class JumpMan:  # fix this... and then delete this comment.
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
-        self.timeSinceLastJump = 10000
+        self.timeSinceLastJump = 100
         self.width = 20
         self.height = 20
         self.status = Constants.STATUS_WALKING
@@ -43,19 +43,17 @@ class JumpMan:  # fix this... and then delete this comment.
         """
         if self.status == Constants.STATUS_JUMPING:
             if self.timeSinceLastJump > Constants.JUMP_DURATION:
-                color = pygame.Color(255, 255, 255)
-            else:
                 color = pygame.Color(255, 255, 0)
-            pygame.draw.rect(surface, color,
-                             (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
+            else:
+                color = pygame.Color(255, 255, 255)
+            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
         elif self.status == Constants.STATUS_DYING:
-            color = pygame.Color(255, 0, 0)
-            pygame.draw.rect(surface, color,
-                             (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height), 2)
+            pass
+            #color = pygame.Color(255, 0, 0)
+            #pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height), 2)
         elif self.status == Constants.STATUS_WALKING:
-            color = pygame.Color(255, 255, 0)
-            pygame.draw.rect(surface, color,
-                             (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
+            color = pygame.Color(255, 255, 255)
+            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
 
     def step(self, deltaT):
         """
@@ -76,7 +74,7 @@ class JumpMan:  # fix this... and then delete this comment.
     def jump(self):
         if self.status == Constants.STATUS_WALKING:
             self.status = Constants.STATUS_JUMPING
-            self.y += Constants.JUMPMAN_JUMP_BOOST
+            self.y -= Constants.JUMPMAN_JUMP_BOOST
 
     def die(self):
         """
