@@ -46,13 +46,16 @@ class JumpMan:  # fix this... and then delete this comment.
                 color = pygame.Color(255, 255, 255)
             else:
                 color = pygame.Color(255, 255, 0)
-            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
+            pygame.draw.rect(surface, color,
+                             (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
         elif self.status == Constants.STATUS_DYING:
             color = pygame.Color(255, 0, 0)
-            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height), 2)
+            pygame.draw.rect(surface, color,
+                             (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height), 2)
         elif self.status == Constants.STATUS_WALKING:
             color = pygame.Color(255, 255, 0)
-            pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
+            pygame.draw.rect(surface, color,
+                             (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
 
     def step(self, deltaT):
         """
