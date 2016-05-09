@@ -1,10 +1,10 @@
 __author__ = 'Jimmyjamz'  # Update this!!!
 import pygame
 import random
-import Constants.py
+import Constants
 
 
-class className:  # fix this... and then delete this comment.
+class Platform:  # fix this... and then delete this comment.
 
     def __init__(self):
         """
@@ -15,7 +15,7 @@ class className:  # fix this... and then delete this comment.
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
-        self.width = 20
+        self.width = 70
         self.height = Constants.PLATFORM_HEIGHT
 
     def isDead(self):

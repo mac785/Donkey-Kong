@@ -10,15 +10,15 @@ class JumpMan:  # fix this... and then delete this comment.
         """
         This automatically gets called when you first create this object.
         """
-        self.x = 200
-        self.y = 300
+        self.x = 100
+        self.y = 200
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
         self.timeSinceLastJump = 100
         self.width = 20
         self.height = 20
-        self.status = Constants.STATUS_WALKING
+        self.status = Constants.STATUS_JUMPING
         self.timeSinceDeath = 0.0
 
     def isDead(self):
@@ -65,6 +65,20 @@ class JumpMan:  # fix this... and then delete this comment.
         self.x += self.vx * deltaT
         self.y += self.vy * deltaT
 
+        if self.status != Constants.STATUS_WALKING:
+            self.vy += Constants.JUMPMAN_VERT_ACCELERATION * deltaT
+            if self.vy > Constants.JUMPMAN_MAX_VERT_VEL:
+                self.vy = Constants.JUMPMAN_MAX_VERT_VEL
+
+        if self.x >= 400 - self.width / 2:
+            self.x = 400 - self.width /2
+        if self.x <= 0 + self.width / 2:
+            self.x = 0 + self.width / 2
+        if self.y >= 400 - self.height / 2:
+            self.y = 400 - self.height / 2
+        if self.y <= 0 + self.height / 2:
+            self.y = 0 + self.height / 2
+
     def moveLeft(self):
         self.x -= Constants.MOVE_DISTANCE
 
@@ -75,6 +89,10 @@ class JumpMan:  # fix this... and then delete this comment.
         if self.status == Constants.STATUS_WALKING:
             self.status = Constants.STATUS_JUMPING
             self.y -= Constants.JUMPMAN_JUMP_BOOST
+
+    def land(self):
+        self.status = Constants.STATUS_WALKING
+        self.vy = 0
 
     def die(self):
         """
