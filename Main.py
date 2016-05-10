@@ -118,6 +118,7 @@ def checkForInteractions():
     one another.
     """
     checkJumpManPlatformCollisions()
+    checkJumpManLedgeCollisions()
     # checkJumpManBarrelCollisions()
     # checkJumpManLadderClimb()
 
@@ -174,7 +175,12 @@ def checkJumpManLedgeCollisions():
             # 5) Overlapping with bottom edge of platform?
             # 6) Overlapping with top edge of platform?
 
-            if jumpMan.status == Constants.STATUS_JUMPING and jumpMan.vx < 0 and jumpMan.x - l.x < jumpMan.width / 2 + l.width / 2 and jumpMan.x - jumpMan.width / 2 > l.x + l.width / 2 - 10 and jumpMan.y - l.y < jumpMan.height / 2 + l.height / 2 and l.y - jumpMan.y < jumpMan.height / 2 + l.height:
+            if jumpMan.status == Constants.STATUS_JUMPING and \
+                                    jumpMan.vx < 0 and \
+                                    jumpMan.x + jumpMan.width / 2 > l.x - l.width / 2 and \
+                                    jumpMan.x - jumpMan.width / 2 < l.x + l.width / 2 and \
+                                    jumpMan.y + jumpMan.height / 2 > l.y - l.height / 2 and \
+                                    jumpMan.y - jumpMan.height / 2 < l.y + l.height / 2:
 
                 jumpMan.vx *= -1
                 # find out how much the ostrich's left edge is past the platform's right edge
@@ -191,7 +197,12 @@ def checkJumpManLedgeCollisions():
             # 5) Overlapping with bottom edge of platform?
             # 6) Overlapping with top edge of platform?
 
-            elif jumpMan.status == Constants.STATUS_JUMPING and jumpMan.vx > 0 and l.x - jumpMan.x < jumpMan.width / 2 + l.width / 2 and jumpMan.x + jumpMan.width / 2 < l.x - l.width / 2 + 10 and jumpMan.y - l.y < jumpMan.height / 2 + l.height / 2 and l.y - jumpMan.y < jumpMan.height / 2 + l.height:
+            elif jumpMan.status == Constants.STATUS_JUMPING and \
+                                    jumpMan.vx > 0 and \
+                                    l.x + l.width / 2 < jumpMan.width / 2 - jumpMan.x and \
+                                    l.x - l.width / 2 > jumpMan.width / 2 + jumpMan.x and \
+                                    l.y + l.height / 2 > jumpMan.y - jumpMan.height / 2 and \
+                                    l.y - l.height / 2 < jumpMan.y + jumpMan.height / 2:
 
                 jumpMan.vx *= -1
                 # find out how much the ostrich's left edge is past the platform's right edge
@@ -233,7 +244,12 @@ def checkJumpManPlatformCollisions():
             # 5) Overlapping with bottom edge of platform?
             # 6) Overlapping with top edge of platform?
 
-            if jumpMan.status == Constants.STATUS_JUMPING and jumpMan.vx < 0 and jumpMan.x - p.x < jumpMan.width / 2 + p.width / 2 and jumpMan.x - jumpMan.width / 2 > p.x + p.width / 2 - 10 and jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and p.y - jumpMan.y < jumpMan.height / 2 + p.height:
+            if jumpMan.status == Constants.STATUS_JUMPING and \
+                                    jumpMan.vx < 0 and \
+                                    jumpMan.x - p.x < jumpMan.width / 2 + p.width / 2 and \
+                                    jumpMan.x - jumpMan.width / 2 > p.x + p.width / 2 and \
+                                    jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and \
+                                    p.y - jumpMan.y < jumpMan.height / 2 + p.height:
 
                 jumpMan.vx *= -1
                 # find out how much the ostrich's left edge is past the platform's right edge

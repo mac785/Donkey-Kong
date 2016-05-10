@@ -10,7 +10,7 @@ class JumpMan:  # fix this... and then delete this comment.
         """
         This automatically gets called when you first create this object.
         """
-        self.x = 100
+        self.x = 200
         self.y = 200
         self.vx = 0
         self.vy = 0
@@ -88,7 +88,7 @@ class JumpMan:  # fix this... and then delete this comment.
     def jump(self):
         if self.status == Constants.STATUS_WALKING:
             self.status = Constants.STATUS_JUMPING
-            self.y -= Constants.JUMPMAN_JUMP_BOOST
+            self.vy -= Constants.JUMPMAN_JUMP_BOOST
 
     def land(self):
         self.status = Constants.STATUS_WALKING
