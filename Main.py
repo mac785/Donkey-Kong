@@ -1,4 +1,4 @@
-import pygame, sys, traceback, JumpMan, PlatformFile, Constants, LedgeFile
+import pygame, sys, traceback, JumpMan, PlatformFile, Constants
 from pygame.locals import *
 
 __author__ = 'Jimmyjamz'  # put your name here!!!
@@ -29,7 +29,7 @@ def setup():
     Unlike the "preSetup()" method, you are welcome to change this!
     """
 
-    global jumpMan, leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed
+    global jumpMan, leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, ledgeTest
     global barrelList, platformList, ledgeList
 
     jumpMan = JumpMan.JumpMan()
@@ -39,27 +39,33 @@ def setup():
     rightKeyPressed = False
     upKeyPressed = False
     downKeyPressed = False
-
-    ledgeList = []
-    ledge1 = LedgeFile.Ledge()
-    objectsOnScreen.append(ledge1)
-    ledgeList.append(ledge1)
-    ledge1.x = 200
-    ledge1.y = 340
+    ledgeTest = False
 
     platformList = []
     platform1 = PlatformFile.Platform()
     objectsOnScreen.append(platform1)
     platformList.append(platform1)
-    platform1.x = 320
-    platform1.y = 320
+    platform1.x = 200
+    platform1.y = 390
+    platform1.width = 400
 
     platform2 = PlatformFile.Platform()
     objectsOnScreen.append(platform2)
     platformList.append(platform2)
-    platform2.x = 200
-    platform2.y = 390
-    platform2.width = 400
+    platform2.x = 320
+    platform2.y = 340
+
+    platform3 = PlatformFile.Platform()
+    objectsOnScreen.append(platform3)
+    platformList.append(platform3)
+    platform3.x = 250
+    platform3.y = 336
+
+    platform4 = PlatformFile.Platform()
+    objectsOnScreen.append(platform4)
+    platformList.append(platform4)
+    platform4.x = 180
+    platform4.y = 332
 
 
 # =====================  loop()
@@ -118,7 +124,6 @@ def checkForInteractions():
     one another.
     """
     checkJumpManPlatformCollisions()
-    checkJumpManLedgeCollisions()
     # checkJumpManBarrelCollisions()
     # checkJumpManLadderClimb()
 
@@ -163,75 +168,6 @@ def debugDisplay(buffer, deltaT):
     buffer.blit(fpsSurface, ((surface_rect.w - 5) - debugFont.size("{0:3.1f} FPS".format(1 / deltaT))[0], (surface_rect.h - 15)))
 
 
-def checkJumpManLedgeCollisions():
-    global jumpMan
-    if jumpMan.status == Constants.STATUS_JUMPING:
-        for l in ledgeList:
-            # Check whether we hit the right edge of the platform....
-            # 1) are we Jumping?
-            # 2) Jumping to the left?
-            # 3) Overlapping right edge of platform in x?
-            # 4) Within 10 pixels of right edge of platform in x?
-            # 5) Overlapping with bottom edge of platform?
-            # 6) Overlapping with top edge of platform?
-
-            if jumpMan.status == Constants.STATUS_JUMPING and \
-                                    jumpMan.vx < 0 and \
-                                    jumpMan.x + jumpMan.width / 2 > l.x - l.width / 2 and \
-                                    jumpMan.x - jumpMan.width / 2 < l.x + l.width / 2 and \
-                                    jumpMan.y + jumpMan.height / 2 > l.y - l.height / 2 and \
-                                    jumpMan.y - jumpMan.height / 2 < l.y + l.height / 2:
-
-                jumpMan.vx *= -1
-                # find out how much the ostrich's left edge is past the platform's right edge
-                overlap = (l.x + l.width / 2) - (jumpMan.x - jumpMan.width / 2)
-                # "bounce" the ostrich away from the right edge, by that amount.
-                jumpMan.x = (l.x + l.width / 2) + jumpMan.width / 2 + overlap
-
-
-            # Check whether we hit the left edge of the platform....
-            # 1) are we Jumping?
-            # 2) Jumping to the right?
-            # 3) Overlapping left edge of platform in x?
-            # 4) Within 10 pixels of left edge of platform in x?
-            # 5) Overlapping with bottom edge of platform?
-            # 6) Overlapping with top edge of platform?
-
-            elif jumpMan.status == Constants.STATUS_JUMPING and \
-                                    jumpMan.vx > 0 and \
-                                    l.x + l.width / 2 < jumpMan.width / 2 - jumpMan.x and \
-                                    l.x - l.width / 2 > jumpMan.width / 2 + jumpMan.x and \
-                                    l.y + l.height / 2 > jumpMan.y - jumpMan.height / 2 and \
-                                    l.y - l.height / 2 < jumpMan.y + jumpMan.height / 2:
-
-                jumpMan.vx *= -1
-                # find out how much the ostrich's left edge is past the platform's right edge
-                overlap = (jumpMan.x + jumpMan.width / 2) - (l.x - l.width / 2)
-                # "bounce" the ostrich away from the right edge, by that amount.
-                jumpMan.x = (l.x - l.width / 2) - jumpMan.width / 2 - overlap
-
-            elif abs(jumpMan.x - l.x) < jumpMan.width / 2 + l.width / 2:
-                # hitting from below...
-                if jumpMan.vy < 0:  # moving up?
-                    if abs(jumpMan.y - l.y) < jumpMan.height / 2 + l.height / 2 + 1:
-                        jumpMan.vy = abs(jumpMan.vy)
-                elif jumpMan.vy > 0:  # moving down?
-                    if l.y - jumpMan.y < jumpMan.height / 2 + l.height / 2 and l.y > jumpMan.y:
-                        jumpMan.land()
-                        jumpMan.y = l.y - l.height / 2 - jumpMan.height / 2
-
-    elif jumpMan.status == Constants.STATUS_WALKING:
-        # I think I'm walking... is there any ground under my feet?
-        isTouching = False
-        for l in ledgeList:
-            if abs(jumpMan.x - l.x) < jumpMan.width / 2 + l.width / 2 and abs(jumpMan.y - l.y) < jumpMan.height / 2 + l.height / 2 + 1:
-                isTouching = True
-
-        if not isTouching:
-            jumpMan.status = Constants.STATUS_JUMPING
-
-
-
 def checkJumpManPlatformCollisions():
     global jumpMan
     if jumpMan.status == Constants.STATUS_JUMPING:
@@ -245,17 +181,18 @@ def checkJumpManPlatformCollisions():
             # 6) Overlapping with top edge of platform?
 
             if jumpMan.status == Constants.STATUS_JUMPING and \
-                                    jumpMan.vx < 0 and \
+                            jumpMan.vx < 0 and \
                                     jumpMan.x - p.x < jumpMan.width / 2 + p.width / 2 and \
-                                    jumpMan.x - jumpMan.width / 2 > p.x + p.width / 2 and \
-                                    jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and \
-                                    p.y - jumpMan.y < jumpMan.height / 2 + p.height:
+                                    jumpMan.x - jumpMan.width / 2 > p.x + p.width / 2:
+                if jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and p.y - jumpMan.y < jumpMan.height / 2 + p.height:
 
-                jumpMan.vx *= -1
-                # find out how much the ostrich's left edge is past the platform's right edge
-                overlap = (p.x + p.width / 2) - (jumpMan.x - jumpMan.width / 2)
-                # "bounce" the ostrich away from the right edge, by that amount.
-                jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2 + overlap
+                else:
+
+                    jumpMan.vx = 0
+                    # find out how much the ostrich's left edge is past the platform's right edge
+                    overlap = (p.x + p.width / 2) - (jumpMan.x - jumpMan.width / 2)
+                    # "bounce" the ostrich away from the right edge, by that amount.
+                    jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2 + overlap
 
 
             # Check whether we hit the left edge of the platform....
@@ -266,9 +203,14 @@ def checkJumpManPlatformCollisions():
             # 5) Overlapping with bottom edge of platform?
             # 6) Overlapping with top edge of platform?
 
-            elif jumpMan.status == Constants.STATUS_JUMPING and jumpMan.vx > 0 and p.x - jumpMan.x < jumpMan.width / 2 + p.width / 2 and jumpMan.x + jumpMan.width / 2 < p.x - p.width / 2 + 10 and jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and p.y - jumpMan.y < jumpMan.height / 2 + p.height:
+            elif jumpMan.status == Constants.STATUS_JUMPING and \
+                            jumpMan.vx > 0 and \
+                                    p.x - jumpMan.x < jumpMan.width / 2 + p.width / 2 and \
+                                    jumpMan.x + jumpMan.width / 2 < p.x - p.width / 2 + 10 and \
+                                    jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and \
+                                    p.y - jumpMan.y < jumpMan.height / 2 + p.height:
 
-                jumpMan.vx *= -1
+                jumpMan.vx = 0
                 # find out how much the ostrich's left edge is past the platform's right edge
                 overlap = (jumpMan.x + jumpMan.width / 2) - (p.x - p.width / 2)
                 # "bounce" the ostrich away from the right edge, by that amount.
@@ -278,7 +220,8 @@ def checkJumpManPlatformCollisions():
                 # hitting from below...
                 if jumpMan.vy < 0:  # moving up?
                     if abs(jumpMan.y - p.y) < jumpMan.height / 2 + p.height / 2 + 1:
-                        jumpMan.vy = abs(jumpMan.vy)
+                        jumpMan.vy = 0
+                        # jumpMan.vy = abs(jumpMan.vy)
                 elif jumpMan.vy > 0:  # moving down?
                     if p.y - jumpMan.y < jumpMan.height / 2 + p.height / 2 and p.y > jumpMan.y:
                         jumpMan.land()
@@ -317,7 +260,7 @@ def readEvents():
             if evt.key == K_UP:
                 upKeyPressed = True
             if evt.key == K_DOWN:
-                downKeyPressed = True
+                pass
 
         if evt.type == KEYUP:
             if evt.key == K_LEFT:
@@ -327,7 +270,7 @@ def readEvents():
             if evt.key == K_UP:
                 upKeyPressed = False
             if evt.key == K_DOWN:
-                downKeyPressed = False
+                pass
 
                 # You may decide to check other events, like the mouse
                 # or keyboard here.

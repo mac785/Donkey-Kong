@@ -38,7 +38,7 @@ class Ledge:  # fix this... and then delete this comment.
         whatever this shape looks like onto the given surface.
         :param surface: what to draw on.
         """
-        color = pygame.Color(128, 64, 0)
+        color = pygame.Color(128, 0, 0)
         pygame.draw.rect(surface, color, (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
 
     def step(self, deltaT):
