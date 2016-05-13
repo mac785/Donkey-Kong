@@ -42,12 +42,12 @@ def setup():
     ledgeTest = False
 
     platformList = []
-    platform1 = PlatformFile.Platform()
+    """platform1 = PlatformFile.Platform()
     objectsOnScreen.append(platform1)
     platformList.append(platform1)
     platform1.x = 200
     platform1.y = 390
-    platform1.width = 400
+    platform1.width = 400"""
 
     platform2 = PlatformFile.Platform()
     objectsOnScreen.append(platform2)
@@ -179,20 +179,19 @@ def checkJumpManPlatformCollisions():
             # 4) Within 10 pixels of right edge of platform in x?
             # 5) Overlapping with bottom edge of platform?
             # 6) Overlapping with top edge of platform?
-
+            print jumpMan.vx
             if jumpMan.status == Constants.STATUS_JUMPING and \
                             jumpMan.vx < 0 and \
-                                    jumpMan.x - p.x < jumpMan.width / 2 + p.width / 2 and \
-                                    jumpMan.x - jumpMan.width / 2 > p.x + p.width / 2:
-                if jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and p.y - jumpMan.y < jumpMan.height / 2 + p.height:
-
-                else:
-
-                    jumpMan.vx = 0
-                    # find out how much the ostrich's left edge is past the platform's right edge
-                    overlap = (p.x + p.width / 2) - (jumpMan.x - jumpMan.width / 2)
-                    # "bounce" the ostrich away from the right edge, by that amount.
-                    jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2 + overlap
+                                    jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and \
+                                    jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2 and \
+                                    jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and \
+                                    jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
+                print "Hit edge"
+                jumpMan.vx *= -1
+                # find out how much jumpMan's left edge is past the platform's right edge
+                overlap = (p.x + p.width / 2) - (jumpMan.x - jumpMan.width / 2)
+                # "bounce" jumpMan away from the right edge, by that amount.
+                jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2 + overlap
 
 
             # Check whether we hit the left edge of the platform....
@@ -210,10 +209,10 @@ def checkJumpManPlatformCollisions():
                                     jumpMan.y - p.y < jumpMan.height / 2 + p.height / 2 and \
                                     p.y - jumpMan.y < jumpMan.height / 2 + p.height:
 
-                jumpMan.vx = 0
-                # find out how much the ostrich's left edge is past the platform's right edge
+                jumpMan.vx *= -1
+                # find out how much jumpMan left edge is past the platform's right edge
                 overlap = (jumpMan.x + jumpMan.width / 2) - (p.x - p.width / 2)
-                # "bounce" the ostrich away from the right edge, by that amount.
+                # "bounce" jumpMan away from the right edge, by that amount.
                 jumpMan.x = (p.x - p.width / 2) - jumpMan.width / 2 - overlap
 
             elif abs(jumpMan.x - p.x) < jumpMan.width / 2 + p.width / 2:

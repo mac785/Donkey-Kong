@@ -71,19 +71,22 @@ class JumpMan:  # fix this... and then delete this comment.
                 self.vy = Constants.JUMPMAN_MAX_VERT_VEL
 
         if self.x >= 400 - self.width / 2:
-            self.x = 400 - self.width /2
+            self.x = 400 - self.width / 2
         if self.x <= 0 + self.width / 2:
             self.x = 0 + self.width / 2
         if self.y >= 400 - self.height / 2:
             self.y = 400 - self.height / 2
         if self.y <= 0 + self.height / 2:
             self.y = 0 + self.height / 2
+            self.status = Constants.STATUS_WALKING
 
     def moveLeft(self):
         self.x -= Constants.MOVE_DISTANCE
+        self.vx = -1
 
     def moveRight(self):
         self.x += Constants.MOVE_DISTANCE
+        self.vx = 1
 
     def jump(self):
         if self.status == Constants.STATUS_WALKING:
