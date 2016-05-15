@@ -185,6 +185,7 @@ def checkJumpManPlatformCollisions():
                 if jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2:
                     if jumpMan.status == Constants.STATUS_JUMPING:
                         jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2
+                        print "hit"
                     """elif jumpMan.status == Constants.STATUS_WALKING:
                         jumpMan.y -= 4"""
 
@@ -203,6 +204,7 @@ def checkJumpManPlatformCollisions():
                 if jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2:
                     if jumpMan.status == Constants.STATUS_JUMPING:
                         jumpMan.x = (p.x - p.width / 2) - jumpMan.width / 2
+                        print "hit"
                     """elif jumpMan.status == Constants.STATUS_WALKING:
                         jumpMan.y -= 4"""
                 elif jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
@@ -228,8 +230,6 @@ def checkJumpManPlatformCollisions():
 
         if not isTouching:
             jumpMan.status = Constants.STATUS_JUMPING
-        elif jumpMan.status == Constants.STATUS_WALKING:
-            jumpMan.y -= 4
 
 
 # =====================  readEvents()
