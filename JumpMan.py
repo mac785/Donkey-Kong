@@ -78,7 +78,6 @@ class JumpMan:  # fix this... and then delete this comment.
             self.y = 400 - self.height / 2
         if self.y <= 0 + self.height / 2:
             self.y = 0 + self.height / 2
-            self.status = Constants.STATUS_WALKING
 
     def moveLeft(self):
         self.x -= Constants.MOVE_DISTANCE
