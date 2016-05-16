@@ -185,13 +185,14 @@ def checkJumpManPlatformCollisions():
                 if jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2:
                     if jumpMan.status == Constants.STATUS_JUMPING:
                         jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2
-                        print "hit"
+                        print "hit 2"
                     """elif jumpMan.status == Constants.STATUS_WALKING:
                         jumpMan.y -= 4"""
 
                 elif jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
                     if jumpMan.status == Constants.STATUS_JUMPING:
                         jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2
+                        print "slap 2"
             # Check whether we hit the left edge of the platform....
             # 1) are we Jumping?
             # 2) Jumping to the right?
@@ -204,12 +205,13 @@ def checkJumpManPlatformCollisions():
                 if jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2:
                     if jumpMan.status == Constants.STATUS_JUMPING:
                         jumpMan.x = (p.x - p.width / 2) - jumpMan.width / 2
-                        print "hit"
+                        print "hit 1"
                     """elif jumpMan.status == Constants.STATUS_WALKING:
                         jumpMan.y -= 4"""
                 elif jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
                     if jumpMan.status == Constants.STATUS_JUMPING:
                         jumpMan.x = (p.x - p.width / 2) - jumpMan.width / 2
+                        print "slap 1"
             elif abs(jumpMan.x - p.x) < jumpMan.width / 2 + p.width / 2:
                 # hitting from below...
                 if jumpMan.vy < 0:  # moving up?
