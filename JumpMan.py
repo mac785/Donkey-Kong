@@ -10,8 +10,8 @@ class JumpMan:  # fix this... and then delete this comment.
         """
         This automatically gets called when you first create this object.
         """
-        self.x = 200
-        self.y = 200
+        self.x = 30
+        self.y = 380
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
@@ -78,6 +78,7 @@ class JumpMan:  # fix this... and then delete this comment.
             self.y = 400 - self.height / 2
         if self.y <= 0 + self.height / 2:
             self.y = 0 + self.height / 2
+            self.vy = 1
 
     def moveLeft(self):
         self.x -= Constants.MOVE_DISTANCE

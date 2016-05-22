@@ -1,4 +1,4 @@
-import pygame, sys, traceback, JumpMan, PlatformFile, Constants
+import pygame, sys, traceback, JumpMan, PlatformFile, Constants, BarrelFile
 from pygame.locals import *
 
 __author__ = 'Jimmyjamz'  # put your name here!!!
@@ -29,17 +29,21 @@ def setup():
     Unlike the "preSetup()" method, you are welcome to change this!
     """
 
-    global jumpMan, leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, ledgeTest
-    global barrelList, platformList, ledgeList
+    global jumpMan, leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, ledgeTest, barrel
+    global barrelList, platformList, ledgeList, barrelWait
 
     jumpMan = JumpMan.JumpMan()
     objectsOnScreen.append(jumpMan)
+    objectsOnScreen.append(barrel)
+    barrel = BarrelFile.Barrel
 
     leftKeyPressed = False
     rightKeyPressed = False
     upKeyPressed = False
     downKeyPressed = False
     ledgeTest = False
+
+    barrelWait = 0
 
     platformList = []
     platform1 = PlatformFile.Platform()
@@ -52,20 +56,129 @@ def setup():
     platform2 = PlatformFile.Platform()
     objectsOnScreen.append(platform2)
     platformList.append(platform2)
-    platform2.x = 320
+    platform2.x = 315
     platform2.y = 340
 
     platform3 = PlatformFile.Platform()
     objectsOnScreen.append(platform3)
     platformList.append(platform3)
-    platform3.x = 250
+    platform3.x = 245
     platform3.y = 336
 
     platform4 = PlatformFile.Platform()
     objectsOnScreen.append(platform4)
     platformList.append(platform4)
-    platform4.x = 180
+    platform4.x = 175
     platform4.y = 332
+
+    platform5 = PlatformFile.Platform()
+    objectsOnScreen.append(platform5)
+    platformList.append(platform5)
+    platform5.x = 105
+    platform5.y = 328
+
+    platform6 = PlatformFile.Platform()
+    objectsOnScreen.append(platform6)
+    platformList.append(platform6)
+    platform6.x = 35
+    platform6.y = 324
+
+    platform7 = PlatformFile.Platform()
+    objectsOnScreen.append(platform7)
+    platformList.append(platform7)
+    platform7.x = 85
+    platform7.y = 269
+
+    platform8 = PlatformFile.Platform()
+    objectsOnScreen.append(platform8)
+    platformList.append(platform8)
+    platform8.x = 155
+    platform8.y = 265
+
+    platform9 = PlatformFile.Platform()
+    objectsOnScreen.append(platform9)
+    platformList.append(platform9)
+    platform9.x = 225
+    platform9.y = 261
+
+    platform10 = PlatformFile.Platform()
+    objectsOnScreen.append(platform10)
+    platformList.append(platform10)
+    platform10.x = 295
+    platform10.y = 257
+
+    platform11 = PlatformFile.Platform()
+    objectsOnScreen.append(platform11)
+    platformList.append(platform11)
+    platform11.x = 365
+    platform11.y = 253
+
+    platform12 = PlatformFile.Platform()
+    objectsOnScreen.append(platform12)
+    platformList.append(platform12)
+    platform12.x = 315
+    platform12.y = 198
+
+    platform13 = PlatformFile.Platform()
+    objectsOnScreen.append(platform13)
+    platformList.append(platform13)
+    platform13.x = 245
+    platform13.y = 194
+
+    platform14 = PlatformFile.Platform()
+    objectsOnScreen.append(platform14)
+    platformList.append(platform14)
+    platform14.x = 175
+    platform14.y = 190
+
+    platform15 = PlatformFile.Platform()
+    objectsOnScreen.append(platform15)
+    platformList.append(platform15)
+    platform15.x = 105
+    platform15.y = 186
+
+    platform16 = PlatformFile.Platform()
+    objectsOnScreen.append(platform16)
+    platformList.append(platform16)
+    platform16.x = 35
+    platform16.y = 182
+
+    platform17 = PlatformFile.Platform()
+    objectsOnScreen.append(platform17)
+    platformList.append(platform17)
+    platform17.x = 85
+    platform17.y = 127
+
+    platform18 = PlatformFile.Platform()
+    objectsOnScreen.append(platform18)
+    platformList.append(platform18)
+    platform18.x = 155
+    platform18.y = 123
+
+    platform19 = PlatformFile.Platform()
+    objectsOnScreen.append(platform19)
+    platformList.append(platform19)
+    platform19.x = 225
+    platform19.y = 119
+
+    platform20 = PlatformFile.Platform()
+    objectsOnScreen.append(platform20)
+    platformList.append(platform20)
+    platform20.x = 295
+    platform20.y = 115
+
+    platform21 = PlatformFile.Platform()
+    objectsOnScreen.append(platform21)
+    platformList.append(platform21)
+    platform21.x = 365
+    platform21.y = 111
+
+    platform22 = PlatformFile.Platform()
+    objectsOnScreen.append(platform22)
+    platformList.append(platform22)
+    platform22.width = 350
+    platform22.x = 175
+    platform22.y = 56
 
 
 # =====================  loop()
@@ -77,6 +190,7 @@ def loop(deltaT):
      the methods it calls.
     """
     drawBackground()
+    barrelSpawn()
     animateObjects(deltaT)
     checkForInteractions()
     clearDeadObjects()
@@ -169,62 +283,79 @@ def debugDisplay(buffer, deltaT):
     fpsSurface = debugFont.render("{0:3.1f} FPS".format(1 / deltaT), True, (255, 255, 255))
     buffer.blit(fpsSurface, ((surface_rect.w - 5) - debugFont.size("{0:3.1f} FPS".format(1 / deltaT))[0], (surface_rect.h - 15)))
 
+def barrelSpawn():
+    global barrelWait
+    barrelWait += 1
+    if barrelWait < 100:
+        pass
+    elif barrelWait >= 100:
+        objectsOnScreen.append(barrel)
 
 def checkJumpManPlatformCollisions():
     global jumpMan
-    if jumpMan.status == Constants.STATUS_JUMPING:
-        for p in platformList:
-            # Check whether we hit the right edge of the platform....
-            # 1) are we Jumping?
-            # 2) Jumping to the left?
-            # 3) Overlapping right edge of platform in x?
-            # 4) Within 10 pixels of right edge of platform in x?
-            # 5) Overlapping with bottom edge of platform?
-            # 6) Overlapping with top edge of platform?
-            if jumpMan.vx < 0 and \
-                            jumpMan.status == Constants.STATUS_JUMPING and \
-                                    jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and \
-                                    jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2 and \
-                                    jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and \
-                                    jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
+    for p in platformList:
+        if abs(jumpMan.x - p.x) < jumpMan.width / 2 + p.width / 2:
+            # hitting from below...
+            if jumpMan.vy < 0:  # moving up?
+                if abs(jumpMan.y - p.y) < jumpMan.height / 2 + p.height / 2:
+                #if p.y - jumpMan.y < jumpMan.height / 2 + p.height / 2 and p.y < jumpMan.y:
+                    print "Bottom Hit"
+                    jumpMan.vy = 0
+                    # jumpMan.vy = abs(jumpMan.vy)
+            elif jumpMan.vy > 0:  # moving down?
+                if p.y - jumpMan.y < jumpMan.height / 2 + p.height / 2 and p.y > jumpMan.y:
+                    print "Top Hit"
+                    jumpMan.land()
+                    jumpMan.y = p.y - p.height / 2 - jumpMan.height / 2
+
+        # Check whether we hit the right edge of the platform....
+        # 1) are we Jumping?
+        # 2) Jumping to the left?
+        # 3) Overlapping right edge of platform in x?
+        # 4) Within 10 pixels of right edge of platform in x?
+        # 5) Overlapping with bottom edge of platform?
+        # 6) Overlapping with top edge of platform?
+        if jumpMan.vx < 0 and \
+                                jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and \
+                                jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2 and \
+                                jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and \
+                                jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
+            if jumpMan.status == Constants.STATUS_JUMPING:
                 jumpMan.x = (p.x + p.width / 2) + jumpMan.width / 2
+                print "Left Hit"
+            if jumpMan.status == Constants.STATUS_WALKING:
+                jumpMan.y -= 4
 
-            # Check whether we hit the left edge of the platform....
-            # 1) are we Jumping?
-            # 2) Jumping to the right?
-            # 3) Overlapping left edge of platform in x?
-            # 4) Within 10 pixels of left edge of platform in x?
-            # 5) Overlapping with bottom edge of platform?
-            # 6) Overlapping with top edge of platform?
+        # Check whether we hit the left edge of the platform....
+        # 1) are we Jumping?
+        # 2) Jumping to the right?
+        # 3) Overlapping left edge of platform in x?
+        # 4) Within 10 pixels of left edge of platform in x?
+        # 5) Overlapping with bottom edge of platform?
+        # 6) Overlapping with top edge of platform?
 
-            elif jumpMan.vx > 0 and \
-                            jumpMan.status == Constants.STATUS_JUMPING and \
-                                    jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and \
-                                    jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2 and \
-                                    jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and \
-                                    jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
+        elif jumpMan.vx > 0 and \
+                                jumpMan.x - jumpMan.width / 2 < p.x + p.width / 2 and \
+                                jumpMan.x + jumpMan.width / 2 > p.x - p.width / 2 and \
+                                jumpMan.y - jumpMan.height / 2 < p.y + p.height / 2 and \
+                                jumpMan.y + jumpMan.height / 2 > p.y - p.height / 2:
+            if jumpMan.status == Constants.STATUS_JUMPING:
                 jumpMan.x = (p.x - p.width / 2) - jumpMan.width / 2
+                print "Left Hit"
+            if jumpMan.status == Constants.STATUS_WALKING:
+                jumpMan.y -= 4
 
-            elif abs(jumpMan.x - p.x) < jumpMan.width / 2 + p.width / 2:
-                # hitting from below...
-                if jumpMan.vy < 0:  # moving up?
-                    if abs(jumpMan.y - p.y) < jumpMan.height / 2 + p.height / 2 + 1:
-                        jumpMan.vy = 0
-                        # jumpMan.vy = abs(jumpMan.vy)
-                elif jumpMan.vy > 0:  # moving down?
-                    if p.y - jumpMan.y < jumpMan.height / 2 + p.height / 2 and p.y > jumpMan.y:
-                        jumpMan.land()
-                        jumpMan.y = p.y - p.height / 2 - jumpMan.height / 2
 
-    elif jumpMan.status == Constants.STATUS_WALKING:
-        # I think I'm walking... is there any ground under my feet?
-        isTouching = False
-        for p in platformList:
-            if abs(jumpMan.x - p.x) < jumpMan.width / 2 + p.width / 2 and abs(jumpMan.y - p.y) < jumpMan.height / 2 + p.height / 2 + 1:
-                isTouching = True
 
-        if not isTouching:
-            jumpMan.status = Constants.STATUS_JUMPING
+        elif jumpMan.status == Constants.STATUS_WALKING:
+            # I think I'm walking... is there any ground under my feet?
+            isTouching = False
+            for p in platformList:
+                if abs(jumpMan.x - p.x) < jumpMan.width / 2 + p.width / 2 and abs(jumpMan.y - p.y) < jumpMan.height / 2 + p.height / 2 + 1:
+                    isTouching = True
+
+            if not isTouching:
+                jumpMan.status = Constants.STATUS_JUMPING
 
 
 # =====================  readEvents()

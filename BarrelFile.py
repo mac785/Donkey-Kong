@@ -9,8 +9,8 @@ class Barrel:  # fix this... and then delete this comment.
         """
         This automatically gets called when you first create this object.
         """
-        self.x = 200
-        self.y = 300
+        self.x = 20
+        self.y = 20
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
