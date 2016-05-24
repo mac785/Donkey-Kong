@@ -33,6 +33,7 @@ def setup():
     global barrelList, platformList, ledgeList, barrelWait
 
     jumpMan = JumpMan.JumpMan()
+    barrel = BarrelFile.Barrel()
     objectsOnScreen.append(jumpMan)
     objectsOnScreen.append(barrel)
     barrel = BarrelFile.Barrel
@@ -42,8 +43,6 @@ def setup():
     upKeyPressed = False
     downKeyPressed = False
     ledgeTest = False
-
-    barrelWait = 0
 
     platformList = []
     platform1 = PlatformFile.Platform()
@@ -284,12 +283,12 @@ def debugDisplay(buffer, deltaT):
     buffer.blit(fpsSurface, ((surface_rect.w - 5) - debugFont.size("{0:3.1f} FPS".format(1 / deltaT))[0], (surface_rect.h - 15)))
 
 def barrelSpawn():
-    global barrelWait
-    barrelWait += 1
-    if barrelWait < 100:
-        pass
-    elif barrelWait >= 100:
-        objectsOnScreen.append(barrel)
+    pass
+    """pygame.time.set_timer(USEREVENT+1, 1000)
+    while 1:
+        for event in pygame.event.get():
+            if event.type == USEREVENT+1:
+                objectsOnScreen.append(barrel)"""
 
 def checkJumpManPlatformCollisions():
     global jumpMan

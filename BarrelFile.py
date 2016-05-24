@@ -14,6 +14,7 @@ class Barrel:  # fix this... and then delete this comment.
         self.vx = 0
         self.vy = 0
         self.iAmAlive = True
+        self.rad = 10
 
     def isDead(self):
         """
@@ -36,6 +37,7 @@ class Barrel:  # fix this... and then delete this comment.
         :param surface: what to draw on.
         """
         color = pygame.Color(128, 128, 128)  # not really necessary
+        pygame.draw.circle(surface, color, (int(self.x), int(self.y)), self.rad, 0)
 
     def step(self, deltaT):
         """
