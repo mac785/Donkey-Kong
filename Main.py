@@ -42,7 +42,7 @@ def setup():
     downKeyPressed = False
     ledgeTest = False
 
-    pygame.time.set_timer(USEREVENT + 1, 1000)
+    pygame.time.set_timer(USEREVENT + 1, 5000)
 
     platformList = []
     platform1 = PlatformFile.Platform()
@@ -239,8 +239,9 @@ def checkForInteractions():
     """
     checkJumpManPlatformCollisions()
     checkBarrelPlatformCollisions()
-    # checkJumpManBarrelCollisions()
-    # checkJumpManLadderClimb()
+    checkJumpManBarrelCollisions()
+    checkBarrelDie()
+    checkVictory()
 
 
 # =====================  clearDeadObjects()
@@ -282,6 +283,28 @@ def debugDisplay(buffer, deltaT):
     fpsSurface = debugFont.render("{0:3.1f} FPS".format(1 / deltaT), True, (255, 255, 255))
     buffer.blit(fpsSurface, ((surface_rect.w - 5) - debugFont.size("{0:3.1f} FPS".format(1 / deltaT))[0], (surface_rect.h - 15)))
 
+def checkVictory():
+    if jumpMan.x < 50 and jumpMan.y < 50:
+        jumpMan.iAmAlive = False
+        quit()
+
+def checkBarrelDie():
+    global barrelList
+    for b in barrelList:
+        if b.x >= 390 and b.y > 300:
+            b.iAmAlive = False
+            b.x = 1000
+            b.y = 1000
+
+def checkJumpManBarrelCollisions():
+    global jumpMan, barrelList
+    for b in barrelList:
+        if jumpMan.x - jumpMan.width / 2 < b.x + b.rad and \
+                                jumpMan.x + jumpMan.width / 2 > b.x - b.rad and \
+                                jumpMan.y - jumpMan.height / 2 < b.y + b.rad and \
+                                jumpMan.y + jumpMan.height / 2 > b.y - b.rad / 2:
+            jumpMan.x = 30
+            jumpMan.y = 360
 
 def checkJumpManPlatformCollisions():
     global jumpMan
