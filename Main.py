@@ -33,16 +33,16 @@ def setup():
     global barrelList, platformList, ledgeList, barrelWait
 
     jumpMan = JumpMan.JumpMan()
-    barrel = BarrelFile.Barrel()
     objectsOnScreen.append(jumpMan)
-    objectsOnScreen.append(barrel)
-    barrel = BarrelFile.Barrel
+    barrelList = []
 
     leftKeyPressed = False
     rightKeyPressed = False
     upKeyPressed = False
     downKeyPressed = False
     ledgeTest = False
+
+    pygame.time.set_timer(USEREVENT + 1, 1000)
 
     platformList = []
     platform1 = PlatformFile.Platform()
@@ -189,7 +189,6 @@ def loop(deltaT):
      the methods it calls.
     """
     drawBackground()
-    barrelSpawn()
     animateObjects(deltaT)
     checkForInteractions()
     clearDeadObjects()
@@ -239,6 +238,7 @@ def checkForInteractions():
     one another.
     """
     checkJumpManPlatformCollisions()
+    checkBarrelPlatformCollisions()
     # checkJumpManBarrelCollisions()
     # checkJumpManLadderClimb()
 
@@ -282,13 +282,6 @@ def debugDisplay(buffer, deltaT):
     fpsSurface = debugFont.render("{0:3.1f} FPS".format(1 / deltaT), True, (255, 255, 255))
     buffer.blit(fpsSurface, ((surface_rect.w - 5) - debugFont.size("{0:3.1f} FPS".format(1 / deltaT))[0], (surface_rect.h - 15)))
 
-def barrelSpawn():
-    pass
-    """pygame.time.set_timer(USEREVENT+1, 1000)
-    while 1:
-        for event in pygame.event.get():
-            if event.type == USEREVENT+1:
-                objectsOnScreen.append(barrel)"""
 
 def checkJumpManPlatformCollisions():
     global jumpMan
@@ -357,12 +350,81 @@ def checkJumpManPlatformCollisions():
                 jumpMan.status = Constants.STATUS_JUMPING
 
 
+
+def checkBarrelPlatformCollisions():
+    global barrelList
+    for barrel in barrelList:
+        for p in platformList:
+            if abs(barrel.x - p.x) < barrel.rad + p.width / 2:
+                # hitting from below...
+                if barrel.vy < 0:  # moving up?
+                    if abs(barrel.y - p.y) < barrel.rad + p.height / 2:
+                    #if p.y - jumpMan.y < jumpMan.height / 2 + p.height / 2 and p.y < jumpMan.y:
+                        print "Bottom Hit B"
+                        barrel.vy = 0
+                        # jumpMan.vy = abs(jumpMan.vy)
+                elif barrel.vy > 0:  # moving down?
+                    if p.y - barrel.y < barrel.rad + p.height / 2 and p.y > barrel.y:
+                        print "Top Hit B"
+                        barrel.land()
+                        barrel.y = p.y - p.height / 2 - barrel.rad
+
+            # Check whether we hit the right edge of the platform....
+            # 1) are we Jumping?
+            # 2) Jumping to the left?
+            # 3) Overlapping right edge of platform in x?
+            # 4) Within 10 pixels of right edge of platform in x?
+            # 5) Overlapping with bottom edge of platform?
+            # 6) Overlapping with top edge of platform?
+            if barrel.vx < 0 and \
+                                    barrel.x - barrel.rad < p.x + p.width / 2 and \
+                                    barrel.x + barrel.rad > p.x - p.width / 2 and \
+                                    barrel.y - barrel.rad < p.y + p.height / 2 and \
+                                    barrel.y + barrel.rad > p.y - p.height / 2:
+                if barrel.status == Constants.STATUS_JUMPING:
+                    barrel.x = (p.x + p.width / 2) + barrel.rad
+                    print "Left Hit B"
+                if barrel.status == Constants.STATUS_WALKING:
+                    barrel.y -= 4
+
+            # Check whether we hit the left edge of the platform....
+            # 1) are we Jumping?
+            # 2) Jumping to the right?
+            # 3) Overlapping left edge of platform in x?
+            # 4) Within 10 pixels of left edge of platform in x?
+            # 5) Overlapping with bottom edge of platform?
+            # 6) Overlapping with top edge of platform?
+
+            elif barrel.vx > 0 and \
+                                    barrel.x - barrel.rad < p.x + p.width / 2 and \
+                                    barrel.x + barrel.rad > p.x - p.width / 2 and \
+                                    barrel.y - barrel.rad < p.y + p.height / 2 and \
+                                    barrel.y + barrel.rad > p.y - p.height / 2:
+                if barrel.status == Constants.STATUS_JUMPING:
+                    barrel.x = (p.x - p.width / 2) - barrel.rad
+                    print "Left Hit B"
+                if barrel.status == Constants.STATUS_WALKING:
+                    barrel.y -= 4
+
+
+
+            elif barrel.status == Constants.STATUS_WALKING:
+                # I think I'm walking... is there any ground under my feet?
+                isTouching = False
+                for p in platformList:
+                    if abs(barrel.x - p.x) < barrel.rad + p.width / 2 and abs(barrel.y - p.y) < barrel.rad + p.height / 2 + 1:
+                        isTouching = True
+
+                if not isTouching:
+                    barrel.status = Constants.STATUS_JUMPING
+
+
 # =====================  readEvents()
 def readEvents():
     """
     checks the list of events and determines whether to respond to one.
     """
-    global leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed
+    global leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, barrelList
     events = pygame.event.get()  # get the list of all events since the last time
     # note: this list might be empty.
     for evt in events:
@@ -390,6 +452,10 @@ def readEvents():
                 upKeyPressed = False
             if evt.key == K_DOWN:
                 pass
+        if evt.type == USEREVENT + 1:
+            tempBarrel = BarrelFile.Barrel()
+            objectsOnScreen.append(tempBarrel)
+            barrelList.append(tempBarrel)
 
                 # You may decide to check other events, like the mouse
                 # or keyboard here.

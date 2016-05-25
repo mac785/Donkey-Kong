@@ -1,6 +1,7 @@
 __author__ = 'Jimmyjamz'
 import pygame
 import random
+import Constants
 
 
 class Barrel:  # fix this... and then delete this comment.
@@ -11,10 +12,11 @@ class Barrel:  # fix this... and then delete this comment.
         """
         self.x = 20
         self.y = 20
-        self.vx = 0
-        self.vy = 0
+        self.vx = 100
+        self.vy = 20
         self.iAmAlive = True
         self.rad = 10
+        self.status = Constants.STATUS_JUMPING
 
     def isDead(self):
         """
@@ -49,6 +51,16 @@ class Barrel:  # fix this... and then delete this comment.
         self.x += self.vx * deltaT
         self.y += self.vy * deltaT
 
+        if self.x >= 390:
+            self.vx *= -1
+        if self.x <= 10:
+            self.vx *= -1
+
+        if self.status != Constants.STATUS_WALKING:
+            self.vy += Constants.JUMPMAN_VERT_ACCELERATION * deltaT
+            if self.vy > Constants.JUMPMAN_MAX_VERT_VEL:
+                self.vy = Constants.JUMPMAN_MAX_VERT_VEL
+
     def die(self):
         """
         This is how another object (or the main game) can tell
@@ -57,3 +69,7 @@ class Barrel:  # fix this... and then delete this comment.
         :return:
         """
         self.iAmAlive = False
+
+    def land(self):
+        self.status = Constants.STATUS_WALKING
+        self.vy = 0
